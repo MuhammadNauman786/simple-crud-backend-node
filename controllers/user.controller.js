@@ -1,14 +1,19 @@
-const Product = require('../models/product.model.js');
+const User = require('../models/user.model');
+const {generateToken} = require('../jwt.js');
 
-// Add Product Function
-const addProduct = async function (req, res) {
+// Add User Function
+const addUser = async function (req, res) {
     try {
-      const product = await Product.create(req.body);
+      const user = await User.create(req.body);
+        const token = generateToken(user.id);
+        // user.token = token;
+
       res.status(200).json({
         status: true,
         statusCode: 200,
-        data: product,
-        message: "Product Successfully Added!"
+        data: user,
+        token: token,
+        message: "New user has been successfully create!"
       });
     } catch (error) {
       res.status(500).json({
@@ -19,45 +24,62 @@ const addProduct = async function (req, res) {
     }
   };
 
-  // View Product Function
-  const viewProduct = async (req, res) => {
+  // login User Function
+const loginUser = async function (req, res) {
     try {
-      const products = await Product.find({});
-      res.status(200).json({
-        status: true,
-        statusCode: 200,
-        data: products,
-        message: "Product Successfully Fetched!"
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: false,
-        statusCode: 500,
-        message: error.message
-    });
-    }
-  };
 
-  // View Product By Id Function
-  const viewProductById = async (req, res) => {
-    try {
-  
-      const {id} = req.params;
-      const product = await Product.findById(id);
+        const { email } = req.query;
 
-      if(!product){
+      const user = await User.findOne({email});
+
+      if(!user){
         return res.status(404).json({
           status: true,
           statusCode: 404,
-          message: "Product  Not found"
+          message: "User  Not found"
+        });
+      }
+
+    const token = generateToken(user.id);
+
+    // user.token = token;
+
+      res.status(200).json({
+        status: true,
+        statusCode: 200,
+        data: user,
+        token: token,
+        message: "User has been successfully logged in!"
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: false,
+        statusCode: 500,
+        message: error.message
+    });
+    }
+  };
+
+  // View User profile Function
+  const viewUserProfile = async (req, res) => {
+    try {
+  
+      const userData= req.user;
+      const user = await User.findById(userData.data);
+
+      if(!user){
+        return res.status(404).json({
+          status: true,
+          statusCode: 404,
+          message: "User  Not found"
         });
       }
 
       res.status(200).json({
         status: true,
         statusCode: 200,
-        data: product,
-        message: "Product successfully retreived!"
+        data: user,
+        message: "User successfully retreived!"
       });
     } catch (error) {
       res.status(500).json({
@@ -68,28 +90,28 @@ const addProduct = async function (req, res) {
     }
   };
 
-  // Update Product Function
-  const updateProduct = async(req, res) => {
+// Update User Function
+const updateUser = async(req, res) => {
     try {
   
       const {id} = req.params;
   
-      const product = await Product.findByIdAndUpdate(id, req.body);
+      const user = await User.findByIdAndUpdate(id, req.body);
   
-      if(!product){
+      if(!user){
         return res.status(404).json({
           status: true,
           statusCode: 404,
-          message: "Product  Not found"
+          message: "User  Not found"
         });
       }
   
-      const updatedProduct = await Product.findById(id);
+      const updatedUser = await User.findById(id);
       res.status(200).json({
         status: true,
         statusCode: 200,
-        data: updatedProduct,
-        message: "Product successfully updated!"
+        data: updatedUser,
+        message: "User successfully updated!"
       });
   
   
@@ -104,18 +126,18 @@ const addProduct = async function (req, res) {
     }
   };
 
-// Delete Product Function
-  const deleteProduct = async (req, res) => {
+// Delete User Function
+  const deleteUser = async (req, res) => {
     try {
       const {id} = req.params;
   
-      const product = await Product.findByIdAndDelete(id);
+      const user = await User.findByIdAndDelete(id);
   
-      if(!product){
+      if(!user){
         return res.status(404).json({
           status: true,
           statusCode: 404,
-          message: "Product  Not found"
+          message: "User  Not found"
         });
       }
   
@@ -123,7 +145,7 @@ const addProduct = async function (req, res) {
         status: true,
         statusCode: 200,
         data: product,
-        message: "Product has been deleted successfully!"
+        message: "User has been deleted successfully!"
       });
   
     } catch (error) {
@@ -136,9 +158,9 @@ const addProduct = async function (req, res) {
   };
 
   module.exports = {
-    addProduct,
-    viewProduct,
-    viewProductById,
-    updateProduct,
-    deleteProduct
+    addUser,
+    loginUser,
+    viewUserProfile,
+    updateUser,
+    deleteUser
   };

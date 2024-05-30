@@ -8,25 +8,21 @@ const userSchema = mongoose.Schema({
     age: {
         type: Number
     },
-    modile: {
+    mobile: {
         type: Number,
-        require: true
+        require: true,
+        unique: true
     },
     email: {
         type: String,
         require: true,
-        unique: true
-    },
-    username:{
-        type: String,
-        require: true
-    },
-    password: {
-        type: String,
-        require: true
+        unique: [true, 'Duplicate email entry']
     }
 
+
 });
+
+
 
 const User = mongoose.model("User", userSchema);
 
