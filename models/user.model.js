@@ -16,7 +16,12 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         require: true,
-        unique: [true, 'Duplicate email entry']
+        unique: true
+    },
+    profileImage: {
+        type: String,
+        require: false,
+        default: ""
     }
 
 

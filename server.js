@@ -21,15 +21,13 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 
-
-
 // Routes
-app.use('/api/products', jwtAuthMiddleWare ,productRoute);
-app.use('/api/user', userRoute);
+app.use('/api/v1/products', jwtAuthMiddleWare ,productRoute);
+app.use('/api/v1/user', userRoute);
 
 
 app.get('/', function (_req, res) {
-  res.send('Hello World Oye...');
+  res.send("simple-crud-backend-node \n A Simple project of CRUD operations of mongo DB with Node.js products.");
 });
 
 const PORT = process.env.PORT || 3000 ;

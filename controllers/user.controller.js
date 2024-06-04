@@ -3,10 +3,21 @@ const {generateToken} = require('../jwt.js');
 
 // Add User Function
 const addUser = async function (req, res) {
+    // if(!req.file)res.status(200).json({
+    //   status: true,
+    //   statusCode: 200,
+    //   message: "New user has been successfully create!"
+    // });
+
+
     try {
-      const user = await User.create(req.body);
+        var user = await User.create(req.body);
         const token = generateToken(user.id);
         // user.token = token;
+
+        if (req.file) {
+          user = await User.findByIdAndUpdate(user.id, {profileImage: process.env.BASE_URL+req.file.path});
+        }
 
       res.status(200).json({
         status: true,
@@ -94,10 +105,14 @@ const loginUser = async function (req, res) {
 const updateUser = async(req, res) => {
     try {
   
-      const {id} = req.params;
+      const {id} = req.query;
   
       const user = await User.findByIdAndUpdate(id, req.body);
-  
+
+      if (req.file) {
+        await User.findByIdAndUpdate(id, {profileImage: process.env.BASE_URL+req.file.path});
+      }
+
       if(!user){
         return res.status(404).json({
           status: true,
