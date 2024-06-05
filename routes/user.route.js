@@ -8,7 +8,7 @@ const router = express.Router();
 // Set up storage engine for Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Directory where files will be saved
+    cb(null, 'public/uploads/'); // Directory where files will be saved
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 
 // Create uploads directory if it doesn't exist
 const fs = require('fs');
-const dir = './uploads';
+const dir = './public/uploads';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
