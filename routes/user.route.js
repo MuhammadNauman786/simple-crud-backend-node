@@ -1,5 +1,5 @@
-const {jwtAuthMiddleWare} = require('../jwt.js');
-const {addUser, updateUser, deleteUser, viewUserProfile, loginUser} = require('../controllers/user.controller.js');
+const { jwtAuthMiddleWare } = require('../jwt.js');
+const { addUser, updateUser, deleteUser, viewUserProfile, loginUser } = require('../controllers/user.controller.js');
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -21,24 +21,29 @@ const upload = multer({ storage: storage });
 
 // Create uploads directory if it doesn't exist
 const fs = require('fs');
-const dir = './public/uploads';
+const dir = './public';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
+  const dirUpload = './public/uploads';
+  if (!fs.existsSync(dirUpload)) {
+    fs.mkdirSync(dirUpload);
+
+  }
 }
 
 // SignUp a User
-router.post('/signup', upload.single('profileImage') ,addUser);
+router.post('/signup', upload.single('profileImage'), addUser);
 
 // Login a User
 router.get('/login', loginUser);
 
 // View User Profile
-router.get('/', jwtAuthMiddleWare ,viewUserProfile);
+router.get('/', jwtAuthMiddleWare, viewUserProfile);
 
 // Update User
 router.put('/updateprofile', jwtAuthMiddleWare, upload.single('profileImage'), updateUser);
-  
-// Delete a User
-router.delete('/:id', jwtAuthMiddleWare ,deleteUser);
 
-  module.exports = router;
+// Delete a User
+router.delete('/:id', jwtAuthMiddleWare, deleteUser);
+
+module.exports = router;
